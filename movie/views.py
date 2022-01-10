@@ -1,18 +1,28 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
-from django.http import HttpResponse
-from movie.models import Movie
+from django.http.response import JsonResponse
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+from movie.models import Genre, Movie
+from movie.serializers import GenreListSerializer, MovieDetailSerializer, MovieSerializer
 
-class MovieView(APIView):
 
-    def get(self, request):
-        return HttpResponse("get request")
+class MovieView(ListAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
 
-    def post(self, request):
-        return HttpResponse("post request")
+class MovieDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieDetailSerializer
+    lookup_fields = "pk"
 
-    def put(self, request):
-        return HttpResponse("update request")
+class GenreView(ListAPIView):
+    queryset = Genre.objects.all()
+    serializer_class = GenreListSerializer
 
-    def delete(self, request):
-        return HttpResponse("delete request")
+class GenreDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Genre.objects.all()
+    serializer_class = GenreListSerializer
+    lookup_fields = "pk"
+
+def genre_movie(self, gid):
+    movies = Movie.objects.filter(genre=gid)
+    serialized_data = MovieSerializer(movies, many=True)
+    return JsonResponse(serialized_data.data, safe=False)
