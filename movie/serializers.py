@@ -27,6 +27,11 @@ class CrewSerializer(serializers.RelatedField):
                 'role' : value.role.name,
             }
 
+class CrewMovieSerializer(serializers.RelatedField):
+    class Meta:
+        model = Crew
+        fields = '__all__'
+
 class GenreSerializer(serializers.RelatedField):
     class Meta:
         model = Genre
@@ -36,11 +41,15 @@ class GenreSerializer(serializers.RelatedField):
         return value.title
 
 class MovieSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Movie
         fields = ['id', 'title', 'poster', 'release_date']
 
+class MovieCrewSerializer(serializers.ModelSerializer):
+    crew = CrewMovieSerializer(read_only=True)
+    class Meta:
+        model = Movie
+        fields = ['crew']
 
 class MovieDetailSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
@@ -48,7 +57,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ['id', 'title', 'trailer', 'release_date', 'genre', 'crew']
+        fields = ['id', 'title', 'poster', 'trailer', 'release_date', 'genre', 'crew']
 
 class GenreListSerializer(serializers.ModelSerializer):
     class Meta:

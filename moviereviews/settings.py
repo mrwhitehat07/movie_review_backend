@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-iet1_*3fva^ip-7n*1wr#$tqm+$lz@g6#&*-oo92l536^8@r)b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS=['*']
 
 # Application definition
 
@@ -41,19 +40,19 @@ INSTALLED_APPS = [
     'rest_framework',
     'user.apps.UserConfig',
     'celebs.apps.CelebsConfig',
+    'reviews.apps.ReviewsConfig',
     'rest_framework.authtoken',
     'corsheaders',
 ]
 
 CORS_ALLOW_ALL_ORIGINS  = True
 CORS_ALLOW_CREDENTIALS = True
-ALLOWED_HOSTS=['*']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
