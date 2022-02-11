@@ -29,7 +29,6 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
 from jwt import exceptions as e
 
-
 def decypher(token):
     data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     return data["user"]
@@ -141,6 +140,7 @@ class Register(APIView):
         else:
             print(serializer2.errors)
             raise exceptions.ValidationError("User validation Error")
+
 
 
 class UpdateProfile(generics.UpdateAPIView):

@@ -3,18 +3,27 @@ from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 from celebs.models import Celebs, Role
 from celebs.serializers import CelebritySerializer, RoleSerializer
 from django.http import JsonResponse
-
+from rest_framework.response import Response
 from movie.models import Movie
 from movie.serializers import MovieSerializer
+from rest_framework.views import APIView
 
-class CelebrityListView(ListAPIView):
-    queryset = Celebs.objects.all()
-    serializer_class = CelebritySerializer
+class CelebrityListView(APIView):
+    def get(self, request):
+        queryset = Celebs.objects.all()
+        serializer_class = CelebritySerializer(queryset, many=True)
+        return Response(serializer_class.data)
 
-class CelebrityDetailView(RetrieveUpdateDestroyAPIView):
-    queryset = Celebs.objects.all()
-    serializer_class = CelebritySerializer
-    lookup_fields = "pk"
+class CelebrityDetailView(APIView):
+    def get(self, request, pk):
+        queryset = Celebs.objects.filter(id=pk).first()
+        movies = Movie.objects.filter(crew=pk)
+        serializer_class = CelebritySerializer(queryset, many=False)
+        # return Response({
+        #     "celebs": serializer_class.data,
+        #     "movies": movie_class.data
+        # })
+        return Response(serializer_class.data)
 
 class RoleView(ListAPIView):
     queryset = Role.objects.all()

@@ -1,3 +1,4 @@
+from ast import BinOp
 from django.db import models
 
 class Role(models.Model):
@@ -12,6 +13,7 @@ class Celebs(models.Model):
     dob   = models.DateField()
     image = models.ImageField(upload_to='uploads/celebs/')
     role  = models.ManyToManyField(Role)
+    bio   = models.TextField(null=True, blank=True)  
 
     def __str__(self) -> str:
         return self.fname + " " + self.lname

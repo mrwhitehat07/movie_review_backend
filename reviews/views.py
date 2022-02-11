@@ -1,9 +1,5 @@
-from http import server
-from django.http.response import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound
-from rest_framework.response import Response
-from rest_framework import exceptions
+from django.http.response import JsonResponse
 from rest_framework.views import APIView
-from rest_framework import generics
 from django.utils.decorators import method_decorator
 from movie.models import Movie
 from moviereviews.decorators import check_token
@@ -14,8 +10,13 @@ from .serializers import ReviewSerializer, UpdateReviewSerializer
 
 def movie_reviews(self, pk):
     movies = Review.objects.filter(movie=pk)
-    serialized_data = ReviewSerializer(movies, many=True)
-    return JsonResponse(serialized_data.data, safe=False)
+    mylist = []
+    for i in range(len(movies)):
+        mylist.append({ 
+            "user": ProfileSeriL(Profile.objects.get(user=movies[i].user)).data,
+            "review": ReviewSerializer(Review.objects.get(id=movies[i].id)).data,
+        })
+    return JsonResponse(mylist, safe=False)
 
 def reviews(self, rid):
     review = Review.objects.get(id=rid)

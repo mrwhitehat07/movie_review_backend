@@ -24,6 +24,8 @@ class Movie(models.Model):
     genre           = models.ManyToManyField(Genre)
     crew            = models.ManyToManyField(Crew)
     release_date    = models.DateField()
+    director        = models.TextField(blank=True, null=True)
+    producer        = models.TextField(blank=True, null=True)
     created_at      = models.DateTimeField(auto_now=True)
     updated_at      = models.DateTimeField(auto_now_add=True)
     
