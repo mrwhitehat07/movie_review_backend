@@ -177,8 +177,9 @@ class ChangePassword(APIView):
 class GetUser(APIView):
     def get(self, request, *args, **kwargs):
         response = Response()
+        print(self.kwargs["user"])
         response.data = {
             "profile": ProfileSeriL(Profile.objects.get(user=self.kwargs["user"])).data,
-            "user": UserSer(self.kwargs["user"]).data,
+            # "user": UserSer(self.kwargs["user"]).data,
         }
         return response
