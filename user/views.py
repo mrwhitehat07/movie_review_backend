@@ -111,34 +111,42 @@ class Login(APIView):
 class Register(APIView):
     serializer_class = UserSerializer
     def post(self, request):
-        data = JSONParser().parse(request)
-        email = data["email"]
-        data["user"] = {
-            "username": data["username"], 
-            "email": data["email"],
-            "password": data["password"],
-        }
-        try:
-            userp = UserProfile.objects.get(email=data["email"])
-        except:
-            userp = None
-        try:
-            prof = Profile.objects.get(email=data["email"])
-        except:
-            prof = None
-
-        if userp != None or prof != None:
-            raise exceptions.NotAcceptable("Email already in use.")
-
+        data = request.data
+        email=request.data.get("email")
+        username=request.data.get("username")
+    
+        if email:
+            userp = UserProfile.objects.filter(email=email).first()
+            data["user"] = {
+                "email": email,
+                "password": data["password"],
+            }
+        elif username:
+            userp = UserProfile.objects.filter(username=username).first()
+            data["user"] = {
+                "username": username,
+                "password": data["password"],
+            }
+        else:
+            userp=None
+        
+        if userp != None :
+            raise exceptions.NotAcceptable("Phone or Email already in use.")
+        
         serializer2 = ProfileSerializer(data=data)
+        if serializer2.is_valid(raise_exception=True):
 
-        if serializer2.is_valid():
             serializer2.save()
-            user = UserProfile.objects.get(email=email)
+            # if email:
+            #     user = UserProfile.objects.get(email=email)
+            # if username:
+            #     user = UserProfile.objects.get(username=username)
+
+
             # smtp(user.pk, email)
+
             return Response({"User successfully created"})
         else:
-            print(serializer2.errors)
             raise exceptions.ValidationError("User validation Error")
 
 
@@ -180,6 +188,6 @@ class GetUser(APIView):
         print(self.kwargs["user"])
         response.data = {
             "profile": ProfileSeriL(Profile.objects.get(user=self.kwargs["user"])).data,
-            # "user": UserSer(self.kwargs["user"]).data,
+            "user": UserSer(self.kwargs["user"]).data,
         }
         return response

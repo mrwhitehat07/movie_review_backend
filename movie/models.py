@@ -1,4 +1,5 @@
 # django core import
+from email.policy import default
 from django.db import models
 from celebs.models import Role, Celebs
 
@@ -26,6 +27,7 @@ class Movie(models.Model):
     release_date    = models.DateField()
     director        = models.TextField(blank=True, null=True)
     producer        = models.TextField(blank=True, null=True)
+    imdb_rating     = models.IntegerField(null=True, default=0)
     created_at      = models.DateTimeField(auto_now=True)
     updated_at      = models.DateTimeField(auto_now_add=True)
     
