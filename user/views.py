@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.http.response import HttpResponse
 from django.utils.decorators import method_decorator
 from rest_framework.response import Response
@@ -150,26 +151,26 @@ class Register(APIView):
             raise exceptions.ValidationError("User validation Error")
 
 
-
+@method_decorator(check_token, name='dispatch')
 class UpdateProfile(generics.UpdateAPIView):
     serializer_class = ProfileSerializer
-    lookup_field = "id"
 
     def get_object(self):
-        return Profile.objects.get(id=self.kwargs["id"])
+        return Profile.objects.get(id=self.kwargs["user"].id)
 
     def post(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
-
+@method_decorator(check_token, name='dispatch')
 class ChangePassword(APIView):
     def post(self, request, *args, **kwargs):
         currentPassword = request.data.get("currentPassword")
         newPw1 = request.data.get("newPassword")
         newPw2 = request.data.get("validatePassword")
-        print(newPw1, newPw1)
+        print(self.kwargs['user'].id)
+        print(request.data)
         if newPw1 == newPw2:
-            user_obj = UserProfile.objects.get(id=kwargs["id"])
+            user_obj = UserProfile.objects.get(id=kwargs["user"].id)
 
             if user_obj.check_password(currentPassword):
                 user_obj.set_password(newPw1)
@@ -186,8 +187,12 @@ class GetUser(APIView):
     def get(self, request, *args, **kwargs):
         response = Response()
         print(self.kwargs["user"])
-        response.data = {
-            "profile": ProfileSeriL(Profile.objects.get(user=self.kwargs["user"])).data,
-            "user": UserSer(self.kwargs["user"]).data,
-        }
-        return response
+        profile = Profile.objects.get(user=self.kwargs['user'])
+        if profile:
+            response.data = {
+                "profile": ProfileSeriL(Profile.objects.get(user=self.kwargs["user"])).data,
+                "user": UserSer(self.kwargs["user"]).data,
+            }
+            return response
+        else:
+            return Http404

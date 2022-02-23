@@ -8,7 +8,7 @@ urlpatterns = [
     path('validate-token/', token_validity),
     path('login/',Login.as_view()),
     path('register/',Register.as_view()),
-    path('profile-update/<int:id>/', UpdateProfile.as_view()),
-    path('change-password/<int:id>/', ChangePassword.as_view()),
+    path('profile-update/', UpdateProfile.as_view()),
+    path('change-password/', ChangePassword.as_view(), name='change-password'),
     path('profile/',GetUser.as_view()),
 ]   
