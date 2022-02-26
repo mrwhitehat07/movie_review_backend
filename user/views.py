@@ -151,15 +151,17 @@ class Register(APIView):
             raise exceptions.ValidationError("User validation Error")
 
 
-@method_decorator(check_token, name='dispatch')
+@method_decorator(check_token, name="dispatch")
 class UpdateProfile(generics.UpdateAPIView):
-    serializer_class = ProfileSerializer
-
-    def get_object(self):
-        return Profile.objects.get(id=self.kwargs["user"].id)
-
     def post(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
+        instance = Profile.objects.filter(user=self.kwargs["user"]).first()
+        if instance is None:
+            raise exceptions.NotFound("Profile doesn't exist.")
+        serializer = ProfileSerializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response("Profile updated successfully.")
 
 @method_decorator(check_token, name='dispatch')
 class ChangePassword(APIView):
@@ -167,8 +169,6 @@ class ChangePassword(APIView):
         currentPassword = request.data.get("currentPassword")
         newPw1 = request.data.get("newPassword")
         newPw2 = request.data.get("validatePassword")
-        print(self.kwargs['user'].id)
-        print(request.data)
         if newPw1 == newPw2:
             user_obj = UserProfile.objects.get(id=kwargs["user"].id)
 
@@ -186,7 +186,6 @@ class ChangePassword(APIView):
 class GetUser(APIView):
     def get(self, request, *args, **kwargs):
         response = Response()
-        print(self.kwargs["user"])
         profile = Profile.objects.get(user=self.kwargs['user'])
         if profile:
             response.data = {

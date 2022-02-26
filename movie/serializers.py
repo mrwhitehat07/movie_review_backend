@@ -45,11 +45,11 @@ class MovieSerializer(serializers.ModelSerializer):
         model = Movie
         fields = ['id', 'title', 'poster', 'release_date']
 
-class MovieCrewSerializer(serializers.ModelSerializer):
-    crew = CrewMovieSerializer(read_only=True)
-    class Meta:
-        model = Movie
-        fields = ['crew']
+# class MovieCrewSerializer(serializers.ModelSerializer):
+#     crew = CrewMovieSerializer(read_only=True)
+#     class Meta:
+#         model = Movie
+#         fields = ['crew']
 
 class MovieDetailSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
