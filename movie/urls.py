@@ -1,5 +1,5 @@
 from django.urls import path
-from movie.views import GenreDetailView, GenreView, MovieDetailView, MovieView, action_movie, genre_movie, get_movie_celebs, search
+from movie.views import GenreDetailView, GenreView, MovieDetailView, MovieView, NotificationView, action_movie, genre_movie, get_movie_celebs, search
 from reviews.views import UpdateReview, movie_reviews, Reviews, reviews
 
 urlpatterns = [
@@ -14,5 +14,6 @@ urlpatterns = [
     path('reviews/<int:rid>', reviews, name="reviews"),
     path('movie/<int:pk>/reviews/post', Reviews.as_view(), name="post-movie-reviews"),
     path('movie/<int:pk>/reviews/update/<int:rid>', UpdateReview.as_view(), name="update-movie-reviews"),
-    path('search/q=<str:query>', search, name='search')
+    path('search/q=<str:query>', search, name='search'),
+    path('notifications/', NotificationView.as_view(), name='notifications')
 ]

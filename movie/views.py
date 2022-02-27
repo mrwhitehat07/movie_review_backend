@@ -5,8 +5,8 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 from celebs.models import Celebs
 from celebs.serializers import CelebritySerializer
-from movie.models import Crew, Genre, Movie
-from movie.serializers import GenreListSerializer, MovieDetailSerializer, MovieSerializer
+from movie.models import Crew, Genre, Movie, Notification
+from movie.serializers import GenreListSerializer, MovieDetailSerializer, MovieSerializer, NotificationSerializer
 from rest_framework.response import Response
 from django.db.models import Q
 
@@ -60,3 +60,10 @@ def search(self, query):
         "movie": MovieSerializer(movie, many=True).data,
         "celebs": CelebritySerializer(celeb,many=True).data,
      })
+
+class NotificationView(APIView):
+    def get(self, request):
+        queryset = Notification.objects.all()
+        serializer_class = NotificationSerializer(queryset, many=True)
+        return Response(serializer_class.data)
+

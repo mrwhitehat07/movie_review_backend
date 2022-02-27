@@ -1,6 +1,6 @@
 from django.db import models
 from rest_framework import serializers
-from movie.models import Crew, Movie, Genre
+from movie.models import Crew, Movie, Genre, Notification
 from celebs.models import Celebs
 
 class CelebsSerializer(serializers.ModelSerializer):
@@ -62,4 +62,9 @@ class MovieDetailSerializer(serializers.ModelSerializer):
 class GenreListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
+        fields = '__all__'
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
         fields = '__all__'
