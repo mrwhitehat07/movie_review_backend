@@ -27,6 +27,7 @@ def reviews(self, rid):
 class Reviews(APIView):
     def post(self, request, pk, *args, **kwargs):
         data = request.data
+        print(data)
         data["user"] = UserProfile.objects.get(username=self.kwargs["user"]).id
         data["movie"] = Movie.objects.get(id=pk).id
         data["rating"] = request.data.get("rating")
