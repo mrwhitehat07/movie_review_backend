@@ -5,7 +5,7 @@ from movie.models import Movie
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    rating = models.FloatField(default=0)
+    rating = models.TextField()
     review = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 

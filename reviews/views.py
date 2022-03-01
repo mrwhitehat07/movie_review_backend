@@ -26,18 +26,18 @@ def reviews(self, rid):
 @method_decorator(check_token, name='dispatch')
 class Reviews(APIView):
     def post(self, request, pk, *args, **kwargs):
-        data = request.data
-        print(data)
-        data["user"] = UserProfile.objects.get(username=self.kwargs["user"]).id
-        data["movie"] = Movie.objects.get(id=pk).id
-        data["rating"] = request.data.get("rating")
-        data["review"] = request.data.get("review")
-        serializer = ReviewSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({"status": "done"})
-        else:
-            return JsonResponse({ "error": serializer.errors })
+        user = UserProfile.objects.get(username=self.kwargs["user"])
+        movie = Movie.objects.get(id=pk)
+        rating = request.data.get("rating")
+        review = request.data.get("review")
+        review = Review(user=user, movie=movie, rating=rating, review=review)
+        review.save()
+        # serializer = ReviewSerializer(data=data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        return JsonResponse({"status": "done"})
+        # else:
+        #     return JsonResponse({ "error": serializer.errors })
 
 @method_decorator(check_token, name='dispatch')
 class UpdateReview(APIView):

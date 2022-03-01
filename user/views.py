@@ -113,18 +113,20 @@ class Register(APIView):
     serializer_class = UserSerializer
     def post(self, request):
         data = request.data
+        print(data)
         email=request.data.get("email")
         username=request.data.get("username")
-    
+        password=request.data.get("password")
+
         if email:
             userp = UserProfile.objects.filter(email=email).first()
-            data["user"] = {
+            data = {
                 "email": email,
                 "password": data["password"],
             }
         elif username:
             userp = UserProfile.objects.filter(username=username).first()
-            data["user"] = {
+            data = {
                 "username": username,
                 "password": data["password"],
             }
@@ -133,11 +135,13 @@ class Register(APIView):
         
         if userp != None :
             raise exceptions.NotAcceptable("Phone or Email already in use.")
-        
-        serializer2 = ProfileSerializer(data=data)
-        if serializer2.is_valid(raise_exception=True):
+        userpro = UserProfile(username=username, password=password, email=email)
+        userpro.save()
+        # serializer2 = ProfileSerializer(data=data)
 
-            serializer2.save()
+        # if serializer2.is_valid(raise_exception=True):
+
+            # serializer2.save()
             # if email:
             #     user = UserProfile.objects.get(email=email)
             # if username:
@@ -146,9 +150,9 @@ class Register(APIView):
 
             # smtp(user.pk, email)
 
-            return Response({"User successfully created"})
-        else:
-            raise exceptions.ValidationError("User validation Error")
+        return Response({"User successfully created"})
+        # else:
+        #     raise exceptions.ValidationError("User validation Error")
 
 
 @method_decorator(check_token, name="dispatch")
