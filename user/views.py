@@ -137,7 +137,7 @@ class Register(APIView):
             raise exceptions.NotAcceptable("Phone or Email already in use.")
         userpro = UserProfile(username=username, password=password, email=email)
         userpro.save()
-        # serializer2 = ProfileSerializer(data=data)
+        # serializer2 = ProfileSerializer(data=data) 
 
         # if serializer2.is_valid(raise_exception=True):
 
