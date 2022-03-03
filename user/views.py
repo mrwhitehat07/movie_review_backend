@@ -111,56 +111,49 @@ class Login(APIView):
 
 class Register(APIView):
     serializer_class = UserSerializer
+
     def post(self, request):
-        data = request.data
-        print(data)
-        email=request.data.get("email")
-        username=request.data.get("username")
-        password=request.data.get("password")
+        data = JSONParser().parse(request)
+        email = data["email"]
+        data["user"] = {
+            "username": data["username"],
+            "email": data["email"],
+            "password": data["password"],
+        }
+        try:
+            userp = UserProfile.objects.get(email=data["email"])
+        except:
+            userp = None
+        try:
+            prof = Profile.objects.get(email=data["email"])
+        except:
+            prof = None
 
-        if email:
-            userp = UserProfile.objects.filter(email=email).first()
-            data = {
-                "email": email,
-                "password": data["password"],
-            }
-        elif username:
-            userp = UserProfile.objects.filter(username=username).first()
-            data = {
-                "username": username,
-                "password": data["password"],
-            }
-        else:
-            userp=None
-        
-        if userp != None :
-            raise exceptions.NotAcceptable("Phone or Email already in use.")
-        userpro = UserProfile(username=username, password=password, email=email)
-        userpro.save()
-        # serializer2 = ProfileSerializer(data=data) 
+        if userp != None or prof != None:
+            raise exceptions.NotAcceptable("Username or Email already in use.")
 
-        # if serializer2.is_valid(raise_exception=True):
+        serializer2 = ProfileSerializer(data=data)
 
-            # serializer2.save()
-            # if email:
-            #     user = UserProfile.objects.get(email=email)
-            # if username:
-            #     user = UserProfile.objects.get(username=username)
+        if serializer2.is_valid():
 
-
+            serializer2.save()
+            # user = UserProfile.objects.get(email=email)
             # smtp(user.pk, email)
+            return Response({"User successfully created"})
+        else:
+            print(serializer2.errors)
+            raise exceptions.ValidationError("User validation Error")
 
-        return Response({"User successfully created"})
-        # else:
-        #     raise exceptions.ValidationError("User validation Error")
 
 
 @method_decorator(check_token, name="dispatch")
 class UpdateProfile(generics.UpdateAPIView):
     def post(self, request, *args, **kwargs):
+        print(request.data)
         instance = Profile.objects.filter(user=self.kwargs["user"]).first()
         if instance is None:
             raise exceptions.NotFound("Profile doesn't exist.")
+
         serializer = ProfileSerializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()

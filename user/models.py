@@ -10,7 +10,7 @@ class Profile(models.Model):
     fname       = models.CharField(max_length=24, null=True)
     lname       = models.CharField(max_length=24, null=True)
     phone       = models.IntegerField(null=True)
-    avatar      = models.ImageField(upload_to='avatar/',null=True)
+    avatar      = models.ImageField(upload_to='avatar/',null=True,default="avatar/ytzmsorlzomhrvfvz5ma.png")
     isStaff     =models.BooleanField(default=False)
 
     def __str__(self):

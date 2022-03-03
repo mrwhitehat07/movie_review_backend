@@ -10,7 +10,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = ['username']
     
     # def to_representation(self, instance):
     #     return {
@@ -25,11 +25,11 @@ class UProfileSerial(serializers.ModelSerializer):
         fields = '__all__'
 
 class ReviewSerializer(serializers.ModelSerializer):
-    # user = UProfileSerial()
+    user = UserProfileSerializer()
     class Meta:
         model = Review
-        fields = ['id','rating', 'review', 'timestamp']
-        # fields = '__all__'
+        # fields = ['id','rating', 'review', 'timestamp']
+        fields = '__all__'
 
     # def to_representation(self, value):
     #     return {

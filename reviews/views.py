@@ -13,7 +13,7 @@ def movie_reviews(self, pk):
     mylist = []
     for i in range(len(movies)):
         mylist.append({ 
-            "user": ProfileSeriL(Profile.objects.get(user=movies[i].user)).data,
+            # "user": ProfileSeriL(Profile.objects.get(user=movies[i].user)).data,
             "review": ReviewSerializer(Review.objects.get(id=movies[i].id)).data,
         })
     return JsonResponse(mylist, safe=False)
